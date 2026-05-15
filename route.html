@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>大洲循環線 バスロケ</title>
+
+<style>
+
+body{
+margin:0;
+background:#f0f0f0;
+font-family:sans-serif;
+}
+
+header{
+background:#0099ff;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:white;
+border-radius:15px;
+padding:20px;
+margin-top:20px;
+}
+
+.stop{
+position:relative;
+padding-left:50px;
+margin:40px 0;
+font-size:20px;
+}
+
+.stop::before{
+content:"";
+position:absolute;
+left:15px;
+top:-40px;
+width:5px;
+height:80px;
+background:#0099ff;
+}
+
+.bus{
+color:red;
+font-size:28px;
+position:absolute;
+left:-5px;
+}
+
+button{
+padding:10px 20px;
+margin:5px;
+border:none;
+border-radius:10px;
+background:#0099ff;
+color:white;
+font-size:16px;
+}
+
+.time{
+font-size:24px;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>大洲循環線</h1>
+
+<p>えれサイト風 簡易バスロケ</p>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<div class="time" id="clock"></div>
+
+</div>
+
+<div class="card">
+
+<h2>ダイヤ選択</h2>
+
+<button onclick="setMode('weekday')">
+平日
+</button>
+
+<button onclick="setMode('sat')">
+土曜
+</button>
+
+<button onclick="setMode('holiday')">
+日祝
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>現在位置</h2>
+
+<div id="busInfo"></div>
+
+</div>
+
+<div class="card">
+
+<h2>路線</h2>
+
+<div id="route"></div>
+
+</div>
+
+</div>
+
+<script>
+
+let mode = "weekday";
+
+function setMode(newMode){
+
+mode = newMode;
+
+updateBus();
+
+}
+
+const data = {
+
+weekday:[
+
+{
+stop:"大分駅前",
+time:"06:49"
+},
+
+{
+stop:"中央通り",
+time:"06:51"
+},
+
+{
+stop:"県庁前",
+time:"06:55"
+},
+
+{
+stop:"競技場前",
+time:"07:00"
+},
+
+{
+stop:"大津町一丁目",
+time:"07:01"
+},
+
+{
+stop:"大洲運動公園前",
+time:"07:04"
+},
+
+{
+stop:"商業高校前",
+time:"07:07"
+},
+
+{
+stop:"古ヶ鶴公民館入口",
+time:"07:15"
+},
+
+{
+stop:"中央通り",
+time:"07:20"
+},
+
+{
+stop:"大分駅前",
+time:"07:22"
+}
+
+],
+
+sat:[
+
+{
+stop:"大分駅前",
+time:"06:57"
+},
+
+{
+stop:"中央通り",
+time:"06:59"
+},
+
+{
+stop:"県庁前",
+time:"07:03"
+},
+
+{
+stop:"競技場前",
+time:"07:07"
+},
+
+{
+stop:"大津町一丁目",
+time:"07:09"
+},
+
+{
+stop:"大洲運動公園前",
+time:"07:11"
+},
+
+{
+stop:"商業高校前",
+time:"07:14"
+},
+
+{
+stop:"古ヶ鶴公民館入口",
+time:"07:28"
+},
+
+{
+stop:"中央通り",
+time:"07:33"
+},
+
+{
+stop:"大分駅前",
+time:"07:34"
+}
+
+],
+
+holiday:[
+
+{
+stop:"大分駅前",
+time:"07:19"
+},
+
+{
+stop:"中央通り",
+time:"07:21"
+},
+
+{
+stop:"県庁前",
+time:"07:25"
+},
+
+{
+stop:"競技場前",
+time:"07:30"
+},
+
+{
+stop:"大津町一丁目",
+time:"07:31"
+},
+
+{
+stop:"大洲運動公園前",
+time:"07:33"
+},
+
+{
+stop:"商業高校前",
+time:"07:35"
+},
+
+{
+stop:"古ヶ鶴公民館入口",
+time:"07:49"
+},
+
+{
+stop:"中央通り",
+time:"07:54"
+},
+
+{
+stop:"大分駅前",
+time:"07:55"
+}
+
+]
+
+};
+
+function timeToMinutes(time){
+
+const parts = time.split(":");
+
+return Number(parts[0]) * 60
++ Number(parts[1]);
+
+}
+
+function getNowMinutes(){
+
+const now = new Date();
+
+return now.getHours() * 60
++ now.getMinutes();
+
+}
+
+function updateClock(){
+
+const now = new Date();
+
+const h =
+String(now.getHours())
+.padStart(2,"0");
+
+const m =
+String(now.getMinutes())
+.padStart(2,"0");
+
+document.getElementById("clock")
+.innerHTML = `現在時刻 ${h}:${m}`;
+
+}
+
+function updateBus(){
+
+const timetable = data[mode];
+
+const now = getNowMinutes();
+
+let currentIndex = 0;
+
+for(let i=0;
+i<timetable.length-1;
+i++){
+
+const current =
+timeToMinutes(
+timetable[i].time
+);
+
+const next =
+timeToMinutes(
+timetable[i+1].time
+);
+
+if(now >= current &&
+now < next){
+
+currentIndex = i;
+
+}
+
+}
+
+const currentStop =
+timetable[currentIndex];
+
+const nextStop =
+timetable[currentIndex+1];
+
+const remain =
+timeToMinutes(nextStop.time)
+- now;
+
+document.getElementById("busInfo")
+.innerHTML = `
+
+<p>
+
+${currentStop.stop}
+〜
+${nextStop.stop}
+間
+</p>
+
+<p>
+次停留所：
+${nextStop.stop}
+</p>
+
+<p>
+到着まで：約${remain}分
+</p>
+
+`;
+
+let html = "";
+
+for(let i=0;
+i<timetable.length;
+i++){
+
+if(i === currentIndex){
+
+html += `
+
+<div class="stop">
+
+<span class="bus">
+
+</span>
+
+${timetable[i].stop}
+
+</div>
+
+`;
+
+}else{
+
+html += `
+
+<div class="stop">
+
+${timetable[i].stop}
+
+</div>
+
+`;
+
+}
+
+}
+
+document.getElementById("route")
+.innerHTML = html;
+
+}
+
+updateClock();
+
+updateBus();
+
+setInterval(()=>{
+
+updateClock();
+
+updateBus();
+
+},1000);
+
+</script>
+
+</body>
+</html>
