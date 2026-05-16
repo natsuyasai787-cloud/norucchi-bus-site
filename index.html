@@ -1,13 +1,203 @@
 <body>
 
+<style>
+
+body{
+
+margin:0;
+
+font-family:sans-serif;
+
+background:
+linear-gradient(
+180deg,
+#dff4ff,
+#f5fbff
+);
+
+color:#333;
+
+}
+
+header{
+
+background:
+linear-gradient(
+135deg,
+#00aaff,
+#0066ff
+);
+
+color:white;
+
+text-align:center;
+
+padding:40px 20px;
+
+border-bottom-left-radius:30px;
+
+border-bottom-right-radius:30px;
+
+box-shadow:
+0 4px 15px rgba(0,0,0,0.2);
+
+}
+
+header h1{
+
+margin:0;
+
+font-size:34px;
+
+}
+
+header p{
+
+margin-top:10px;
+
+font-size:18px;
+
+}
+
+.login-card,
+.rank-card,
+.card{
+
+background:white;
+
+margin:20px;
+
+padding:25px;
+
+border-radius:20px;
+
+box-shadow:
+0 4px 12px rgba(0,0,0,0.1);
+
+}
+
+h2{
+
+margin-top:0;
+
+}
+
+input{
+
+width:100%;
+
+padding:14px;
+
+margin-top:10px;
+
+margin-bottom:15px;
+
+font-size:18px;
+
+border-radius:12px;
+
+border:2px solid #cce7ff;
+
+box-sizing:border-box;
+
+}
+
+button{
+
+width:100%;
+
+padding:15px;
+
+font-size:18px;
+
+border:none;
+
+border-radius:12px;
+
+background:
+linear-gradient(
+135deg,
+#00aaff,
+#0066ff
+);
+
+color:white;
+
+font-weight:bold;
+
+}
+
+button:active{
+
+transform:scale(0.98);
+
+}
+
+.rank{
+
+font-size:32px;
+
+font-weight:bold;
+
+text-align:center;
+
+margin-top:15px;
+
+}
+
+.rank-card h2{
+
+text-align:center;
+
+}
+
+.rank-card p{
+
+text-align:center;
+
+font-size:18px;
+
+}
+
+.card{
+
+transition:0.2s;
+
+}
+
+.card:hover{
+
+transform:translateY(-3px);
+
+}
+
+a{
+
+text-decoration:none;
+
+}
+
+.sheet-button{
+
+background:
+linear-gradient(
+135deg,
+#34a853,
+#0f9d58
+);
+
+}
+
+</style>
+
 <header>
 
 <h1>
-大分バスねっと
+🚌 おおいたバスねっと
 </h1>
 
 <p>
-大分のバスの運用情報サイト
+バス運用報告・写真共有サイト
 </p>
 
 </header>
@@ -36,10 +226,14 @@ placeholder="名前を入力">
 <div class="card">
 
 <h2>
-運用報告
+📝 運用報告
 </h2>
 
-<a href="ここにGoogleフォームURL">
+<p>
+運用情報の投稿
+</p>https://docs.google.com/forms/d/e/1FAIpQLSeXZvUD99JGgXQ_tSAyy_XgiyACGJfqx-Cq9I81qbbZj5zlRw/viewform?usp=publish-editor
+
+<a href="">
 
 <button>
 
@@ -54,14 +248,20 @@ placeholder="名前を入力">
 <div class="card">
 
 <h2>
-写真投稿
+📊 投稿一覧
 </h2>
 
-<a href="ここに写真投稿フォームURL">
+<p>
+Googleスプレッドシートで
+投稿一覧を確認できます
+</p>
 
-<button>
+<a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTlU0bFWVKVjj04Yh6FZv3AYvBvAZZcmsgO7n6w0Bu4FmlAr8S-zZnYQJZPwG9MYctwu687l7RelEV/pubhtml
+">
 
-写真を投稿
+<button class="sheet-button">
+
+投稿一覧を見る
 
 </button>
 
