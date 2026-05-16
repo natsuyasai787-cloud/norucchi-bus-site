@@ -359,29 +359,56 @@ let dayText;
 
 if(today === 0){
 
+// 日曜
 activeData = sunday;
 dayText = "本日は日祝ダイヤです";
 
 }
 else if(today === 6){
 
+// 土曜
 activeData = saturday;
 dayText = "本日は土曜ダイヤです";
 
 }
 else{
 
+// 平日
 activeData = weekday;
 dayText = "本日は平日ダイヤです";
 
 }
 
+// 表示
 document.getElementById("todayType").innerHTML =
 dayText;
 
 
 // =======================================
-// 現在時刻
+// 現在時刻表示
+// =======================================
+
+function updateClock(){
+
+const now = new Date();
+
+const h =
+String(now.getHours()).padStart(2,"0");
+
+const m =
+String(now.getMinutes()).padStart(2,"0");
+
+const s =
+String(now.getSeconds()).padStart(2,"0");
+
+document.getElementById("clock").innerHTML =
+h + ":" + m + ":" + s;
+
+}
+
+
+// =======================================
+// 現在時刻取得
 // =======================================
 
 function getNow(){
@@ -400,20 +427,23 @@ now.getMinutes();
 
 function clearBus(){
 
-document.querySelectorAll(".bus")
-.forEach(v=>v.remove());
+document
+.querySelectorAll(".bus")
+.forEach(v => v.remove());
 
 }
 
 
 // =======================================
-// バス表示
+// バス描画
 // =======================================
 
 function drawBus(stopIndex,color){
 
 const stop =
-document.getElementById("stop"+stopIndex);
+document.getElementById(
+"stop" + stopIndex
+);
 
 if(!stop) return;
 
@@ -429,14 +459,14 @@ stop.appendChild(bus);
 
 
 // =======================================
-// 系統処理
+// 路線処理
 // =======================================
 
 function processRoute(routeData,color){
 
 const now = getNow();
 
-routeData.forEach(trip=>{
+routeData.forEach(trip => {
 
 for(let i=0;i<trip.length-1;i++){
 
@@ -457,7 +487,7 @@ drawBus(i,color);
 
 
 // =======================================
-// 更新
+// バス更新
 // =======================================
 
 function updateBus(){
@@ -474,7 +504,20 @@ processRoute(activeData.k88,"white");
 
 }
 
+
+// =======================================
+// 起動
+// =======================================
+
+updateClock();
 updateBus();
+
+
+// =======================================
+// 自動更新
+// =======================================
+
+setInterval(updateClock,1000);
 
 setInterval(updateBus,30000);
 
