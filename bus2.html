@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+おおいたバスねっと - きゃんバス
+</title>
+
+<style>
+
+body{
+
+margin:0;
+padding:20px;
+
+background:#0f0f0f;
+
+color:white;
+
+font-family:sans-serif;
+
+overflow-x:hidden;
+
+background-image:
+repeating-linear-gradient(
+45deg,
+rgba(255,255,255,0.03) 0px,
+rgba(255,255,255,0.03) 2px,
+transparent 2px,
+transparent 24px
+),
+repeating-linear-gradient(
+-45deg,
+rgba(255,255,255,0.03) 0px,
+rgba(255,255,255,0.03) 2px,
+transparent 2px,
+transparent 24px
+);
+
+}
+
+header{
+
+text-align:center;
+
+margin-bottom:40px;
+
+}
+
+header h1{
+
+color:#ff9d2f;
+
+font-size:38px;
+
+}
+
+header p{
+
+color:#aaa;
+
+}
+
+.mainCard{
+
+background:#1a1a1a;
+
+border-radius:25px;
+
+border:1px solid #333;
+
+padding:25px;
+
+}
+
+.routeContainer{
+
+display:flex;
+
+justify-content:center;
+
+gap:30px;
+
+margin-top:30px;
+
+}
+
+.direction{
+
+width:120px;
+
+text-align:center;
+
+}
+
+.directionTitle{
+
+font-size:18px;
+
+font-weight:bold;
+
+margin-bottom:20px;
+
+color:#ff9d2f;
+
+}
+
+.centerLine{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+}
+
+.stopRow{
+
+display:flex;
+
+align-items:center;
+
+margin:10px 0;
+
+}
+
+.busLeft,
+.busRight{
+
+width:90px;
+
+font-size:14px;
+
+text-align:center;
+
+}
+
+.stop{
+
+width:180px;
+
+background:#111;
+
+border:1px solid #333;
+
+border-radius:14px;
+
+padding:14px;
+
+text-align:center;
+
+z-index:2;
+
+}
+
+.line{
+
+width:6px;
+
+height:35px;
+
+background:#444;
+
+border-radius:10px;
+
+}
+
+.activeLeft{
+
+border:1px solid #4caf50;
+
+box-shadow:
+0 0 15px
+rgba(76,175,80,0.7);
+
+}
+
+.activeRight{
+
+border:1px solid #ff9800;
+
+box-shadow:
+0 0 15px
+rgba(255,152,0,0.7);
+
+}
+
+.busIcon{
+
+font-size:24px;
+
+animation:
+moveBus 1s infinite alternate;
+
+}
+
+@keyframes moveBus{
+
+from{
+
+transform:
+translateX(0px);
+
+}
+
+to{
+
+transform:
+translateX(5px);
+
+}
+
+}
+
+.info{
+
+margin-top:30px;
+
+background:#111;
+
+border-radius:15px;
+
+padding:18px;
+
+border:1px solid #333;
+
+line-height:1.8;
+
+}
+
+.button{
+
+margin-top:30px;
+
+background:
+linear-gradient(
+135deg,
+#ff9d2f,
+#d76b00
+);
+
+color:black;
+
+padding:18px;
+
+border-radius:15px;
+
+text-align:center;
+
+font-weight:bold;
+
+font-size:18px;
+
+}
+
+#timeTablePanel{
+
+position:fixed;
+
+bottom:-100%;
+
+left:0;
+
+width:100%;
+
+background:#1a1a1a;
+
+border-top-left-radius:25px;
+
+border-top-right-radius:25px;
+
+padding:25px;
+
+box-sizing:border-box;
+
+transition:0.4s;
+
+z-index:9999;
+
+max-height:80vh;
+
+overflow:auto;
+
+}
+
+#timeTablePanel.show{
+
+bottom:0;
+
+}
+
+.timeCard{
+
+background:#111;
+
+border:1px solid #333;
+
+border-radius:15px;
+
+padding:15px;
+
+margin-top:15px;
+
+line-height:1.8;
+
+}
+
+.closeButton{
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+border-radius:12px;
+
+background:#333;
+
+color:white;
+
+margin-top:20px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>
+🚌 おおいたバスねっと
+</h1>
+
+<p>
+きゃんバス β版
+</p>
+
+</header>
+
+<div class="mainCard">
+
+<h2 style="text-align:center;">
+🚍 きゃんバス
+</h2>
+
+<div class="routeContainer">
+
+<div class="direction">
+
+<div class="directionTitle">
+⬅ 美術館方面
+</div>
+
+</div>
+
+<div class="centerLine">
+
+<div class="stopRow">
+
+<div
+class="busLeft"
+id="left1">
+
+</div>
+
+<div
+class="stop"
+id="stop1">
+
+大分駅上野の森口
+
+</div>
+
+<div
+class="busRight"
+id="right1">
+
+</div>
+
+</div>
+
+<div class="line"></div>
+
+<div class="stopRow">
+
+<div
+class="busLeft"
+id="left2">
+
+</div>
+
+<div
+class="stop"
+id="stop2">
+
+ホルトホール大分
+
+</div>
+
+<div
+class="busRight"
+id="right2">
+
+</div>
+
+</div>
+
+<div class="line"></div>
+
+<div class="stopRow">
+
+<div
+class="busLeft"
+id="left3">
+
+</div>
+
+<div
+class="stop"
+id="stop3">
+
+東大道1丁目
+
+</div>
+
+<div
+class="busRight"
+id="right3">
+
+</div>
+
+</div>
+
+<div class="line"></div>
+
+<div class="stopRow">
+
+<div
+class="busLeft"
+id="left4">
+
+</div>
+
+<div
+class="stop"
+id="stop4">
+
+東大道2丁目
+
+</div>
+
+<div
+class="busRight"
+id="right4">
+
+</div>
+
+</div>
+
+<div class="line"></div>
+
+<div class="stopRow">
+
+<div
+class="busLeft"
+id="left5">
+
+</div>
+
+<div
+class="stop"
+id="stop5">
+
+上野丘公園
+
+</div>
+
+<div
+class="busRight"
+id="right5">
+
+</div>
+
+</div>
+
+<div class="line"></div>
+
+<div class="stopRow">
+
+<div
+class="busLeft"
+id="left6">
+
+</div>
+
+<div
+class="stop"
+id="stop6">
+
+大分市美術館
+
+</div>
+
+<div
+class="busRight"
+id="right6">
+
+</div>
+
+</div>
+
+</div>
+
+<div class="direction">
+
+<div class="directionTitle">
+大分駅方面 ➡
+</div>
+
+</div>
+
+</div>
+
+<div
+class="info"
+id="nowInfo">
+
+現在位置確認中...
+
+</div>
+
+<div
+class="button"
+onclick="openTimeTable()">
+
+🕒 時刻表を見る
+
+</div>
+
+</div>
+
+<div id="timeTablePanel">
+
+<h2>
+🕒 時刻表
+</h2>
+
+<div id="timeTableContent">
+
+</div>
+
+<button
+class="closeButton"
+onclick="closeTimeTable()">
+
+閉じる
+
+</button>
+
+</div>
+
+<script>
+
+const stops = [
+
+"大分駅上野の森口",
+"ホルトホール大分",
+"東大道1丁目",
+"東大道2丁目",
+"上野丘公園",
+"大分市美術館"
+
+];
+
+const outbound = [
+
+["9:45","9:46","9:47","9:48","9:49","9:51"],
+
+["10:45","10:46","10:47","10:48","10:49","10:51"],
+
+["11:45","11:46","11:47","11:48","11:49","11:51"],
+
+["13:45","13:46","13:47","13:48","13:49","13:51"],
+
+["14:45","14:46","14:47","14:48","14:49","14:51"],
+
+["15:45","15:46","15:47","15:48","15:49","15:51"],
+
+["16:45","16:46","16:47","16:48","16:49","16:51"],
+
+["17:45","17:46","17:47","17:48","17:49","17:51"]
+
+];
+
+const inbound = [
+
+["10:00","10:02","10:03","10:04","10:05","10:06"],
+
+["11:00","11:02","11:03","11:04","11:05","11:06"],
+
+["12:00","12:02","12:03","12:04","12:05","12:06"],
+
+["14:00","14:02","14:03","14:04","14:05","14:06"],
+
+["15:00","15:02","15:03","15:04","15:05","15:06"],
+
+["16:00","16:02","16:03","16:04","16:05","16:06"],
+
+["17:00","17:02","17:03","17:04","17:05","17:06"],
+
+["18:10","18:12","18:13","18:14","18:15","18:16"]
+
+];
+
+function timeToMinutes(time){
+
+const parts =
+time.split(":");
+
+return (
+Number(parts[0]) * 60 +
+Number(parts[1])
+);
+
+}
+
+function clearBus(){
+
+for(let i=1;i<=6;i++){
+
+document
+.getElementById(
+"left"+i
+)
+.innerHTML = "";
+
+document
+.getElementById(
+"right"+i
+)
+.innerHTML = "";
+
+}
+
+}
+
+function updateBus(){
+
+clearBus();
+
+const now =
+new Date();
+
+const current =
+now.getHours()*60 +
+now.getMinutes();
+
+let found = false;
+
+outbound.forEach(bus=>{
+
+bus.forEach((time,index)=>{
+
+const t =
+timeToMinutes(time);
+
+const next =
+bus[index+1]
+?
+timeToMinutes(
+bus[index+1]
+)
+:
+t+3;
+
+if(
+current >= t &&
+current < next
+){
+
+document
+.getElementById(
+"left"+(index+1)
+)
+.innerHTML =
+
+"<div class='busIcon'>🚌</div>";
+
+found = true;
+
+}
+
+});
+
+});
+
+inbound.forEach(bus=>{
+
+bus.forEach((time,index)=>{
+
+const t =
+timeToMinutes(time);
+
+const next =
+bus[index+1]
+?
+timeToMinutes(
+bus[index+1]
+)
+:
+t+3;
+
+if(
+current >= t &&
+current < next
+){
+
+document
+.getElementById(
+"right"+(6-index)
+)
+.innerHTML =
+
+"<div class='busIcon'>🚌</div>";
+
+found = true;
+
+}
+
+});
+
+});
+
+if(found){
+
+document
+.getElementById(
+"nowInfo"
+)
+.innerHTML =
+
+"🟢 現在運行中";
+
+}else{
+
+document
+.getElementById(
+"nowInfo"
+)
+.innerHTML =
+
+"🚫 運行時間外";
+
+}
+
+}
+
+function openTimeTable(){
+
+let html = "";
+
+html +=
+"<div class='timeCard'><b>⬅ 往路</b><br><br>";
+
+outbound.forEach((bus,index)=>{
+
+html +=
+
+(index+1) +
+
+"便 ";
+
+bus.forEach(time=>{
+
+html +=
+time + " ";
+
+});
+
+html +=
+"<br>";
+
+});
+
+html +=
+"</div>";
+
+html +=
+"<div class='timeCard'><b>➡ 復路</b><br><br>";
+
+inbound.forEach((bus,index)=>{
+
+html +=
+
+(index+1) +
+
+"便 ";
+
+bus.forEach(time=>{
+
+html +=
+time + " ";
+
+});
+
+html +=
+"<br>";
+
+});
+
+html +=
+"</div>";
+
+document
+.getElementById(
+"timeTableContent"
+)
+.innerHTML = html;
+
+document
+.getElementById(
+"timeTablePanel"
+)
+.classList.add(
+"show"
+);
+
+}
+
+function closeTimeTable(){
+
+document
+.getElementById(
+"timeTablePanel"
+)
+.classList.remove(
+"show"
+);
+
+}
+
+updateBus();
+
+setInterval(
+updateBus,
+1000
+);
+
+</script>
+
+</body>
+
+</html>
