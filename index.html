@@ -173,47 +173,6 @@ text-align:center;
 
 }
 
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-margin-top:15px;
-
-overflow:hidden;
-
-border-radius:15px;
-
-}
-
-th{
-
-background:#d4af37;
-
-color:black;
-
-padding:12px;
-
-}
-
-td{
-
-padding:12px;
-
-border-bottom:
-1px solid #333;
-
-background:#181818;
-
-}
-
-tr:hover td{
-
-background:#222;
-
-}
-
 .notice{
 
 color:#aaa;
@@ -235,6 +194,16 @@ border:none;
 border-radius:15px;
 
 background:white;
+
+}
+
+.cooldown{
+
+margin-top:10px;
+
+color:#ffcc66;
+
+text-align:center;
 
 }
 
@@ -299,6 +268,12 @@ placeholder="名前を入力">
 
 </button>
 
+<div
+id="cooldownText"
+class="cooldown">
+
+</div>
+
 <p class="notice">
 
 ※ 投稿後に押してください
@@ -313,7 +288,7 @@ placeholder="名前を入力">
 📊 みんなの投稿
 </h2>
 
-<iframe src="https://docs.google.com/spreadsheets/d/1UBR2RFc443wMb9pBo8QEOnfGc5tq6juhc6_eZXXYwx4/edit?resourcekey=&gid=1083008165#gid=1083008165">
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTlU0bFWVKVjj04Yh6FZv3AYvBvAZZcmsgO7n6w0Bu4FmlAr8S-zZnYQJZPwG9MYctwu687l7RelEV/pubhtml?widget=true&amp;headers=false">
 
 </iframe>
 
@@ -345,6 +320,31 @@ return;
 
 }
 
+const now = Date.now();
+
+const lastPostTime =
+Number(
+localStorage.getItem("lastPostTime")
+) || 0;
+
+const diff =
+now - lastPostTime;
+
+if(diff < 30000){
+
+const remain =
+Math.ceil((30000 - diff)/1000);
+
+alert(
+"連続投稿防止中です。\n" +
+remain +
+"秒後に再度押してください。"
+);
+
+return;
+
+}
+
 let posts =
 Number(
 localStorage.getItem(name + "_posts")
@@ -357,9 +357,59 @@ name + "_posts",
 posts
 );
 
+localStorage.setItem(
+"lastPostTime",
+now
+);
+
+alert(
+"投稿完了！\n30秒後に再度投稿できます。"
+);
+
 showUser();
 
+updateCooldown();
+
 }
+
+function updateCooldown(){
+
+const lastPostTime =
+Number(
+localStorage.getItem("lastPostTime")
+) || 0;
+
+const now = Date.now();
+
+const diff =
+now - lastPostTime;
+
+const remain =
+Math.ceil((30000 - diff)/1000);
+
+if(remain > 0){
+
+document.getElementById(
+"cooldownText"
+).innerText =
+"次の投稿完了まで " +
+remain +
+" 秒";
+
+}
+
+else{
+
+document.getElementById(
+"cooldownText"
+).innerText =
+"投稿可能です";
+
+}
+
+}
+
+setInterval(updateCooldown,1000);
 
 function getRank(posts){
 
@@ -430,6 +480,8 @@ ${rank}
 }
 
 showUser();
+
+updateCooldown();
 
 </script>
 
