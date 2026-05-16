@@ -585,7 +585,7 @@ const stops = [
 
 const outbound = [
 
-["21:55","21:56","21:57","21:58","21:59","22:01"],
+["21:55","21:56","21:57","21:58","21:59","22:10"],
 
 ["10:45","10:46","10:47","10:48","10:49","10:51"],
 
@@ -689,6 +689,12 @@ current >= t &&
 current < next
 ){
 
+const move =
+(current - t) /
+(next - t);
+
+if(move < 0.5){
+
 document
 .getElementById(
 "left"+(index+1)
@@ -696,6 +702,18 @@ document
 .innerHTML =
 
 "<div class='busIcon'>🚌</div>";
+
+}else{
+
+document
+.getElementById(
+"left"+(index+2)
+)
+.innerHTML =
+
+"<div class='busIcon'>🚌</div>";
+
+}
 
 found = true;
 
