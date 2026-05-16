@@ -125,6 +125,8 @@ color:white;
 
 font-weight:bold;
 
+margin-top:10px;
+
 }
 
 button:active{
@@ -193,11 +195,11 @@ linear-gradient(
 <header>
 
 <h1>
-🚌 おおいたバスねっと
+🚌 EVのるっちくんバス情報局
 </h1>
 
 <p>
-バス運用報告・写真共有サイト
+EVバス運用報告・写真共有サイト
 </p>
 
 </header>
@@ -230,7 +232,7 @@ placeholder="名前を入力">
 </h2>
 
 <p>
-運用情報の投稿
+EVバスの運用情報を投稿できます
 </p>
 
 <a href="https://docs.google.com/forms/d/e/1FAIpQLSeXZvUD99JGgXQ_tSAyy_XgiyACGJfqx-Cq9I81qbbZj5zlRw/viewform?usp=publish-editor">
@@ -243,9 +245,16 @@ placeholder="名前を入力">
 
 </a>
 
+<button onclick="addPost()">
+
+投稿完了
+
+</button>
+
 </div>
 
 <div class="card">
+
 
 <h2>
 📊 投稿一覧
@@ -256,8 +265,7 @@ Googleスプレッドシートで
 投稿一覧を確認できます
 </p>
 
-<a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTlU0bFWVKVjj04Yh6FZv3AYvBvAZZcmsgO7n6w0Bu4FmlAr8S-zZnYQJZPwG9MYctwu687l7RelEV/pubhtml
-">
+<a href="https://docs.google.com/spreadsheets/d/1UBR2RFc443wMb9pBo8QEOnfGc5tq6juhc6_eZXXYwx4/edit?resourcekey=&gid=730524057#gid=730524057">
 
 <button class="sheet-button">
 
@@ -277,6 +285,23 @@ const name =
 document.getElementById("nameInput").value;
 
 localStorage.setItem("username",name);
+
+showUser();
+
+}
+
+function addPost(){
+
+const name =
+localStorage.getItem("username");
+
+if(!name){
+
+alert("先にログインしてください");
+
+return;
+
+}
 
 let posts =
 Number(
@@ -332,7 +357,7 @@ if(name){
 const posts =
 Number(
 localStorage.getItem(name + "_posts")
-);
+) || 0;
 
 const rank =
 getRank(posts);
