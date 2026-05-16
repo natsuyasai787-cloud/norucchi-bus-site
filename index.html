@@ -1,83 +1,169 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-
-<meta name="google-site-verification" content="8p2beKYYuBYgahPPwrTa_ULHUNKjp8AuQvGl5dHEWyI" />
-  
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>大分バス・大分交通情報局</title>
-
-<style>
-
-body{
-margin:0;
-font-family:sans-serif;
-background:#f0f0f0;
-}
-
-header{
-background:#00aa66;
-color:white;
-text-align:center;
-padding:30px;
-}
-
-.container{
-width:90%;
-margin:auto;
-margin-top:20px;
-}
-
-.card{
-background:white;
-padding:20px;
-margin-bottom:20px;
-border-radius:15px;
-}
-
-img{
-width:100%;
-border-radius:15px;
-}
-
-</style>
-</head>
-
 <body>
 
 <header>
-<h1>大分交通・大分バス・亀の井バス情報局</h1>
-<p>大分のバス情報サイト</p>
+
+<h1>
+大分バスねっと
+</h1>
+
+<p>
+大分のバスの運用情報サイト
+</p>
+
 </header>
-  
+
+<div class="login-card">
+
+<h2>
+ログイン
+</h2>
+
+<input
+id="nameInput"
+type="text"
+placeholder="名前を入力">
+
+<button onclick="login()">
+
+ログイン
+
+</button>
+
+</div>
+
+<div id="userArea"></div>
+
 <div class="card">
-    <h2>みんなの運用投稿</h2>
 
-    <p>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeXZvUD99JGgXQ_tSAyy_XgiyACGJfqx-Cq9I81qbbZj5zlRw/viewform?usp=publish-editor">
-        運用情報を投稿する
-      </a>
-    </p>
- 
+<h2>
+運用報告
+</h2>
+
+<a href="ここにGoogleフォームURL">
+
+<button>
+
+運用報告を投稿
+
+</button>
+
+</a>
+
 </div>
-  
-  <div class="card">
-    <h2>みんなの運用情報</h2>
 
-    <iframe
-      src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTlU0bFWVKVjj04Yh6FZv3AYvBvAZZcmsgO7n6w0Bu4FmlAr8S-zZnYQJZPwG9MYctwu687l7RelEV/pubhtml"
-      width="100%"
-      height="500">
-    </iframe>
-    
-  </div>
 <div class="card">
 
-</div>
+<h2>
+写真投稿
+</h2>
+
+<a href="ここに写真投稿フォームURL">
+
+<button>
+
+写真を投稿
+
+</button>
+
+</a>
 
 </div>
+
+<script>
+
+function login(){
+
+const name =
+document.getElementById("nameInput").value;
+
+localStorage.setItem("username",name);
+
+let posts =
+Number(
+localStorage.getItem(name + "_posts")
+) || 0;
+
+posts++;
+
+localStorage.setItem(
+name + "_posts",
+posts
+);
+
+showUser();
+
+}
+
+function getRank(posts){
+
+if(posts >= 100){
+
+return "💎 プラチナ会員";
+
+}
+
+else if(posts >= 50){
+
+return "🥇 ゴールド会員";
+
+}
+
+else if(posts >= 20){
+
+return "🥈 シルバー会員";
+
+}
+
+else{
+
+return "🥉 ブロンズ会員";
+
+}
+
+}
+
+function showUser(){
+
+const name =
+localStorage.getItem("username");
+
+if(name){
+
+const posts =
+Number(
+localStorage.getItem(name + "_posts")
+);
+
+const rank =
+getRank(posts);
+
+document.getElementById("userArea")
+.innerHTML = `
+
+<div class="rank-card">
+
+<h2>
+こんにちは ${name}さん
+</h2>
+
+<p class="rank">
+${rank}
+</p>
+
+<p>
+投稿回数：${posts}回
+</p>
+
+</div>
+
+`;
+
+}
+
+}
+
+showUser();
+
+</script>
 
 </body>
-</html>
