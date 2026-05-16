@@ -8,14 +8,25 @@ margin:0;
 
 font-family:sans-serif;
 
-background:
-linear-gradient(
-180deg,
-#dff4ff,
-#f5fbff
-);
+background:#0f0f0f;
 
-color:#333;
+color:white;
+
+background-image:
+repeating-linear-gradient(
+45deg,
+rgba(255,255,255,0.03) 0px,
+rgba(255,255,255,0.03) 2px,
+transparent 2px,
+transparent 24px
+),
+repeating-linear-gradient(
+-45deg,
+rgba(255,255,255,0.03) 0px,
+rgba(255,255,255,0.03) 2px,
+transparent 2px,
+transparent 24px
+);
 
 }
 
@@ -24,22 +35,19 @@ header{
 background:
 linear-gradient(
 135deg,
-#00aaff,
-#0066ff
+#111111,
+#222222
 );
-
-color:white;
 
 text-align:center;
 
 padding:40px 20px;
 
-border-bottom-left-radius:30px;
-
-border-bottom-right-radius:30px;
+border-bottom:
+3px solid #d4af37;
 
 box-shadow:
-0 4px 15px rgba(0,0,0,0.2);
+0 4px 15px rgba(0,0,0,0.5);
 
 }
 
@@ -49,13 +57,15 @@ margin:0;
 
 font-size:34px;
 
+color:#d4af37;
+
 }
 
 header p{
 
 margin-top:10px;
 
-font-size:18px;
+color:#cccccc;
 
 }
 
@@ -63,7 +73,7 @@ font-size:18px;
 .rank-card,
 .card{
 
-background:white;
+background:#1a1a1a;
 
 margin:20px;
 
@@ -71,14 +81,19 @@ padding:25px;
 
 border-radius:20px;
 
+border:
+1px solid #333;
+
 box-shadow:
-0 4px 12px rgba(0,0,0,0.1);
+0 4px 15px rgba(0,0,0,0.5);
 
 }
 
 h2{
 
 margin-top:0;
+
+color:#d4af37;
 
 }
 
@@ -96,7 +111,11 @@ font-size:18px;
 
 border-radius:12px;
 
-border:2px solid #cce7ff;
+border:1px solid #555;
+
+background:#111;
+
+color:white;
 
 box-sizing:border-box;
 
@@ -117,11 +136,11 @@ border-radius:12px;
 background:
 linear-gradient(
 135deg,
-#00aaff,
-#0066ff
+#d4af37,
+#8b6f1e
 );
 
-color:white;
+color:black;
 
 font-weight:bold;
 
@@ -147,46 +166,75 @@ margin-top:15px;
 
 }
 
-.rank-card h2{
-
-text-align:center;
-
-}
-
+.rank-card h2,
 .rank-card p{
 
 text-align:center;
 
-font-size:18px;
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+margin-top:15px;
+
+overflow:hidden;
+
+border-radius:15px;
 
 }
 
-.card{
+th{
 
-transition:0.2s;
+background:#d4af37;
 
-}
+color:black;
 
-.card:hover{
-
-transform:translateY(-3px);
+padding:12px;
 
 }
 
-a{
+td{
 
-text-decoration:none;
+padding:12px;
+
+border-bottom:
+1px solid #333;
+
+background:#181818;
 
 }
 
-.sheet-button{
+tr:hover td{
 
-background:
-linear-gradient(
-135deg,
-#34a853,
-#0f9d58
-);
+background:#222;
+
+}
+
+.notice{
+
+color:#aaa;
+
+font-size:14px;
+
+margin-top:10px;
+
+}
+
+iframe{
+
+width:100%;
+
+height:500px;
+
+border:none;
+
+border-radius:15px;
+
+background:white;
 
 }
 
@@ -199,7 +247,7 @@ linear-gradient(
 </h1>
 
 <p>
-バス運用報告サイト
+大分バス運用報告サイト
 </p>
 
 </header>
@@ -232,7 +280,7 @@ placeholder="名前を入力">
 </h2>
 
 <p>
-EVバスの運用情報を投稿できます
+大分バスの運用情報を投稿できます
 </p>
 
 <a href="https://docs.google.com/forms/d/e/1FAIpQLSeXZvUD99JGgXQ_tSAyy_XgiyACGJfqx-Cq9I81qbbZj5zlRw/viewform?usp=publish-editor">
@@ -251,29 +299,23 @@ EVバスの運用情報を投稿できます
 
 </button>
 
+<p class="notice">
+
+※ 投稿後に押してください
+
+</p>
+
 </div>
 
 <div class="card">
 
-
 <h2>
-📊 投稿一覧
+📊 みんなの投稿
 </h2>
 
-<p>
-Googleスプレッドシートで
-投稿一覧を確認できます
-</p>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRTlU0bFWVKVjj04Yh6FZv3AYvBvAZZcmsgO7n6w0Bu4FmlAr8S-zZnYQJZPwG9MYctwu687l7RelEV/pubhtml?widget=true&amp;headers=false">
 
-<a href="https://docs.google.com/spreadsheets/d/1UBR2RFc443wMb9pBo8QEOnfGc5tq6juhc6_eZXXYwx4/edit?resourcekey=&gid=730524057#gid=730524057">
-
-<button class="sheet-button">
-
-投稿一覧を見る
-
-</button>
-
-</a>
+</iframe>
 
 </div>
 
