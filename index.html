@@ -58,6 +58,101 @@ transparent 24px
 
 }
 
+#opening{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100vh;
+
+background:#0a0a0a;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+z-index:9999;
+
+animation:
+openingFade 3s forwards;
+
+}
+
+#opening h1{
+
+color:#d4af37;
+
+font-size:42px;
+
+letter-spacing:3px;
+
+animation:
+logoFade 2.5s ease;
+
+}
+
+@keyframes openingFade{
+
+0%{
+
+opacity:1;
+
+}
+
+70%{
+
+opacity:1;
+
+}
+
+100%{
+
+opacity:0;
+
+visibility:hidden;
+
+}
+
+}
+
+@keyframes logoFade{
+
+0%{
+
+opacity:0;
+
+transform:
+scale(0.8);
+
+}
+
+30%{
+
+opacity:1;
+
+transform:
+scale(1);
+
+}
+
+100%{
+
+opacity:0;
+
+transform:
+scale(1.1);
+
+}
+
+}
+
 header{
 
 background:
@@ -294,6 +389,14 @@ translateY(0);
 
 <body>
 
+<div id="opening">
+
+<h1>
+🚌 おおいたバスねっと
+</h1>
+
+</div>
+
 <header>
 
 <h1>
@@ -386,7 +489,9 @@ class="cooldown">
 function login(){
 
 const name =
-document.getElementById("nameInput").value;
+document.getElementById(
+"nameInput"
+).value;
 
 localStorage.setItem(
 "username",
