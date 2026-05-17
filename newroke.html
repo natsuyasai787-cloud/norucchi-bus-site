@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C30 バスロケ</title>
+
+<style>
+
+body{
+margin:0;
+background:#eef3f8;
+font-family:sans-serif;
+color:#222;
+}
+
+header{
+background:#0066ff;
+color:white;
+padding:18px;
+font-size:28px;
+font-weight:bold;
+text-align:center;
+}
+
+.wrap{
+padding:16px;
+}
+
+.card{
+background:white;
+border-radius:18px;
+padding:18px;
+margin-bottom:16px;
+box-shadow:0 2px 10px rgba(0,0,0,0.08);
+}
+
+.label{
+font-size:14px;
+color:#666;
+margin-bottom:8px;
+}
+
+.big{
+font-size:30px;
+font-weight:bold;
+line-height:1.6;
+}
+
+.mid{
+font-size:22px;
+font-weight:bold;
+line-height:1.7;
+}
+
+select{
+width:100%;
+padding:14px;
+font-size:18px;
+border:none;
+border-radius:12px;
+background:#edf4ff;
+margin-bottom:14px;
+}
+
+.route{
+overflow-x:auto;
+white-space:nowrap;
+padding:14px 0;
+}
+
+.stop{
+display:inline-block;
+width:110px;
+text-align:center;
+position:relative;
+}
+
+.line{
+position:absolute;
+top:8px;
+left:55px;
+width:110px;
+height:6px;
+background:#cfcfcf;
+z-index:-1;
+}
+
+.circle{
+width:22px;
+height:22px;
+border-radius:50%;
+background:#bdbdbd;
+margin:auto;
+margin-bottom:8px;
+}
+
+.active{
+background:#0066ff;
+box-shadow:0 0 12px #0066ff;
+}
+
+.station{
+font-size:14px;
+font-weight:bold;
+white-space:normal;
+}
+
+.timebox{
+background:#0066ff;
+color:white;
+padding:14px;
+border-radius:14px;
+margin-bottom:10px;
+font-size:22px;
+font-weight:bold;
+text-align:center;
+}
+
+.clock{
+font-size:34px;
+font-weight:bold;
+text-align:center;
+}
+
+.status{
+display:inline-block;
+background:#00c853;
+color:white;
+padding:8px 14px;
+border-radius:999px;
+font-size:16px;
+font-weight:bold;
+}
+
+.notice{
+font-size:18px;
+margin-top:12px;
+line-height:1.8;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+C30 大洲循環線
+</header>
+
+<div class="wrap">
+
+<div class="card">
+
+<div class="label">停留所選択</div>
+
+<select id="station"></select>
+
+<div class="label">ダイヤ</div>
+
+<select id="mode">
+<option value="week">平日</option>
+<option value="sat">土曜</option>
+<option value="sun">日祝</option>
+</select>
+
+</div>
+
+<div class="card">
+
+<div class="label">現在時刻</div>
+
+<div class="clock" id="clock"></div>
+
+</div>
+
+<div class="card">
+
+<div class="status">
+🚌 運行中
+</div>
+
+<div class="notice" id="running"></div>
+
+</div>
+
+<div class="card">
+
+<div class="label">現在位置</div>
+
+<div class="route" id="route"></div>
+
+</div>
+
+<div class="card">
+
+<div class="label">次のバス</div>
+
+<div class="big" id="nextbus"></div>
+
+</div>
+
+<div class="card">
+
+<div class="label">次の次のバス</div>
+
+<div class="mid" id="nextnext"></div>
+
+</div>
+
+<div class="card">
+
+<div class="label">選択停留所 時刻一覧</div>
+
+<div id="times"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const stops=[
+"大分駅前⑥",
+"中央通り⑥",
+"県庁前",
+"競技場前",
+"大津町一丁目",
+"大洲運動公園前",
+"商業高校前",
+"古ヶ鶴公民館入口",
+"県庁前",
+"中央通り③",
+"大分駅前③"
+];
+
+const move=[
+2,
+4,
+5,
+1,
+3,
+2,
+5,
+9,
+5,
+1
+];
+
+const week=[
+"09:24","09:54",
+"10:24","10:54",
+"11:24","11:54",
+"12:24","12:54",
+"13:24","13:54",
+"14:24","14:54",
+"15:24","15:54",
+"16:24","16:54",
+"17:24","17:54",
+"18:24","18:54",
+"19:24","19:54"
+];
+
+const sat=[...week];
+const sun=[...week];
+
+const station=document.getElementById("station");
+
+stops.forEach((s,i)=>{
+
+const op=document.createElement("option");
+
+op.value=i;
+
+op.textContent=s;
+
+station.appendChild(op);
+
+});
+
+function addMin(time,min){
+
+let[h,m]=time.split(":").map(Number);
+
+m+=min;
+
+while(m>=60){
+
+h++;
+m-=60;
+
+}
+
+return String(h).padStart(2,"0")
++":"
++
+String(m).padStart(2,"0");
+
+}
+
+function getBase(){
+
+const mode=document.getElementById("mode").value;
+
+if(mode==="week") return week;
+if(mode==="sat") return sat;
+
+return sun;
+
+}
+
+function timeToMin(t){
+
+const[h,m]=t.split(":").map(Number);
+
+return h*60+m;
+
+}
+
+function update(){
+
+const now=new Date();
+
+const hh=String(now.getHours()).padStart(2,"0");
+const mm=String(now.getMinutes()).padStart(2,"0");
+
+const current=`${hh}:${mm}`;
+
+document.getElementById("clock").innerHTML=current;
+
+const idx=parseInt(station.value);
+
+const base=getBase();
+
+const times=[];
+
+base.forEach(t=>{
+
+let total=0;
+
+for(let i=0;i<idx;i++){
+
+total+=move[i];
+
+}
+
+times.push(addMin(t,total));
+
+});
+
+let next="本日の運行終了";
+let next2="--";
+
+for(let i=0;i<times.length;i++){
+
+if(times[i]>=current){
+
+next=`${times[i]} 発`;
+
+if(times[i+1]){
+
+next2=`${times[i+1]} 発`;
+
+}
+
+break;
+
+}
+
+}
+
+document.getElementById("nextbus").innerHTML=
+next;
+
+document.getElementById("nextnext").innerHTML=
+next2;
+
+const route=document.getElementById("route");
+
+route.innerHTML="";
+
+stops.forEach((s,i)=>{
+
+route.innerHTML+=`
+
+<div class="stop">
+
+${i<stops.length-1?'<div class="line"></div>':''}
+
+<div class="circle ${i===idx?'active':''}"></div>
+
+<div class="station">${s}</div>
+
+</div>
+
+`;
+
+});
+
+const list=document.getElementById("times");
+
+list.innerHTML="";
+
+times.forEach(t=>{
+
+list.innerHTML+=`
+
+<div class="timebox">
+
+${t}
+
+</div>
+
+`;
+
+});
+
+/* バス現在位置 */
+
+let running="本日の運行終了";
+
+outer:
+for(let b of base){
+
+let generated=[];
+
+let total=0;
+
+generated.push(b);
+
+for(let i=0;i<move.length;i++){
+
+total+=move[i];
+
+generated.push(addMin(b,total));
+
+}
+
+for(let i=0;i<generated.length-1;i++){
+
+const nowm=
+timeToMin(current);
+
+const a=
+timeToMin(generated[i]);
+
+const z=
+timeToMin(generated[i+1]);
+
+if(nowm>=a && nowm<z){
+
+running=
+`${stops[i]}
+↓
+${stops[i+1]}
+を走行中`;
+
+break outer;
+
+}
+
+}
+
+}
+
+document.getElementById("running").innerHTML=
+running;
+
+}
+
+update();
+
+setInterval(update,1000);
+
+station.addEventListener("change",update);
+
+document.getElementById("mode")
+.addEventListener("change",update);
+
+</script>
+
+</body>
+</html>
