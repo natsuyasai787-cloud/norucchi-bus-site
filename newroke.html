@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>C30 大洲循環線 バスロケ</title>
 
 <style>
@@ -15,7 +15,7 @@ background:#eef3f8;
 
 header{
 background:#0078ff;
-color:white;
+color:#fff;
 padding:18px;
 font-size:28px;
 font-weight:bold;
@@ -23,13 +23,13 @@ text-align:center;
 }
 
 .wrap{
-padding:15px;
 max-width:1200px;
 margin:auto;
+padding:16px;
 }
 
 .card{
-background:white;
+background:#fff;
 border-radius:18px;
 padding:18px;
 margin-bottom:18px;
@@ -55,12 +55,11 @@ margin-bottom:14px;
 .route{
 display:flex;
 overflow-x:auto;
-padding:30px 0;
-align-items:flex-start;
+padding:25px 0;
 }
 
 .stop{
-min-width:140px;
+min-width:150px;
 text-align:center;
 position:relative;
 font-size:14px;
@@ -69,9 +68,9 @@ font-weight:bold;
 
 .line{
 position:absolute;
-top:16px;
-left:70px;
-width:140px;
+top:17px;
+left:75px;
+width:150px;
 height:5px;
 background:#ccc;
 z-index:0;
@@ -81,68 +80,72 @@ z-index:0;
 width:36px;
 height:36px;
 border-radius:50%;
-background:#bbb;
 margin:auto;
 position:relative;
 z-index:2;
+background:#bbb;
 }
 
 .bus1{
 background:#0078ff;
-box-shadow:0 0 16px #0078ff;
+box-shadow:0 0 14px #0078ff;
 }
 
 .bus2{
 background:#ff9800;
-box-shadow:0 0 16px #ff9800;
+box-shadow:0 0 14px #ff9800;
 }
 
 .bus3{
 background:#00c853;
-box-shadow:0 0 16px #00c853;
+box-shadow:0 0 14px #00c853;
 }
 
-.businfo{
+.pass{
+background:#9e9e9e;
+}
+
+.busText{
 margin-top:8px;
 font-size:13px;
+line-height:1.5;
 font-weight:bold;
-line-height:1.6;
 }
 
-.next{
-font-size:32px;
+.passText{
+margin-top:8px;
+font-size:13px;
+color:#666;
 font-weight:bold;
-text-align:center;
 }
 
 .timebox{
 background:#0078ff;
 color:white;
 padding:14px;
-border-radius:14px;
+border-radius:12px;
 margin-bottom:10px;
-text-align:center;
 font-size:22px;
 font-weight:bold;
+text-align:center;
+}
+
+.passed{
+background:#9e9e9e;
+}
+
+.next{
+font-size:34px;
+font-weight:bold;
+text-align:center;
 }
 
 .legend{
 display:flex;
-gap:18px;
+gap:20px;
 flex-wrap:wrap;
 font-weight:bold;
-margin-top:10px;
-}
-
-.pass{
-background:#999;
-}
-
-.passText{
 margin-top:8px;
-font-size:13px;
-font-weight:bold;
-color:#666;
 }
 
 </style>
@@ -151,7 +154,7 @@ color:#666;
 <body>
 
 <header>
-C30 大洲循環線
+C30 大洲循環線 バスロケ
 </header>
 
 <div class="wrap">
@@ -160,7 +163,7 @@ C30 大洲循環線
 
 <div class="label">停留所選択</div>
 
-<select id="stationSelect">
+<select id="station">
 
 <option>大分駅前⑥</option>
 <option>中央通り⑥</option>
@@ -238,6 +241,8 @@ const stops=[
 "大分駅前③"
 ];
 
+/* 駅間時間 */
+
 const move=[
 2,
 4,
@@ -251,28 +256,51 @@ const move=[
 1
 ];
 
+/* 平日 */
+
 const week=[
-"09:24","09:54","10:24","10:54",
-"11:24","11:54","12:24","12:55",
-"13:24","13:54","14:24","14:54",
-"15:24","15:54","16:24","16:54",
-"17:24","17:54","18:54","19:34"
+"09:24","09:54",
+"10:24","10:54",
+"11:24","11:54",
+"12:24","12:55",
+"13:24","13:54",
+"14:24","14:54",
+"15:24","15:54",
+"16:24","16:54",
+"17:24","17:54",
+"18:24","18:54",
+"19:34"
 ];
+
+/* 土曜 */
 
 const sat=[
-"09:24","09:54","10:24","10:54",
-"11:24","11:54","12:24","12:54",
-"13:24","13:54","14:24","14:54",
-"15:24","15:54","16:24","16:54",
-"17:15","17:54","18:24","18:54","19:34"
+"09:24","09:54",
+"10:24","10:54",
+"11:24","11:54",
+"12:24","12:54",
+"13:24","13:54",
+"14:24","14:54",
+"15:24","15:54",
+"16:24","16:54",
+"17:15","17:54",
+"18:24","18:54",
+"19:34"
 ];
 
+/* 日祝 */
+
 const sun=[
-"09:24","09:54","10:24","10:54",
-"11:24","11:54","12:34","12:54",
-"13:05","13:54","14:24","14:54",
-"15:24","15:54","16:54","17:24",
-"17:54","18:24","18:54","19:34"
+"09:24","09:54",
+"10:24","10:54",
+"11:24","11:54",
+"12:34","12:54",
+"13:05","13:54",
+"14:24","14:54",
+"15:24","15:54",
+"16:54","17:24",
+"17:54","18:24",
+"18:54","19:34"
 ];
 
 function addMin(time,min){
@@ -295,7 +323,7 @@ String(m).padStart(2,"0");
 
 }
 
-function timeToMin(t){
+function toMin(t){
 
 const[h,m]=t.split(":").map(Number);
 
@@ -305,8 +333,7 @@ return h*60+m;
 
 function getBase(){
 
-const mode=
-document.getElementById("mode").value;
+const mode=document.getElementById("mode").value;
 
 if(mode==="week") return week;
 if(mode==="sat") return sat;
@@ -317,56 +344,12 @@ return sun;
 
 function update(){
 
-const idx=
-document.getElementById("stationSelect")
-.selectedIndex;
-
-let total=0;
-
-for(let i=0;i<idx;i++){
-
-total+=move[i];
-
-}
-
 const base=getBase();
 
-const times=[];
+const stationIndex=
+document.getElementById("station").selectedIndex;
 
-base.forEach(t=>{
-
-times.push(
-addMin(t,total)
-);
-
-});
-
-const area=
-document.getElementById("times");
-
-area.innerHTML="";
-
-times.forEach(t=>{
-
-let status="";
-
-if(timeToMin(t)<timeToMin(current)){
-
-status="（通過済み）";
-
-}
-
-area.innerHTML+=`
-
-<div class="timebox">
-
-${t} ${status}
-
-</div>
-
-`;
-
-});
+/* 現在時刻 */
 
 const now=new Date();
 
@@ -376,11 +359,51 @@ String(now.getHours()).padStart(2,"0")
 +
 String(now.getMinutes()).padStart(2,"0");
 
+const currentMin=toMin(current);
+
+/* 選択停留所時刻 */
+
+let plus=0;
+
+for(let i=0;i<stationIndex;i++){
+
+plus+=move[i];
+
+}
+
+const stationTimes=
+base.map(t=>addMin(t,plus));
+
+/* 時刻表 */
+
+const times=document.getElementById("times");
+
+times.innerHTML="";
+
+stationTimes.forEach(t=>{
+
+const passed=toMin(t)<currentMin;
+
+times.innerHTML+=`
+
+<div class="timebox ${passed?'passed':''}">
+
+${t}
+${passed?'（通過済み）':''}
+
+</div>
+
+`;
+
+});
+
+/* 次のバス */
+
 let next="本日の運行終了";
 
-for(let t of times){
+for(let t of stationTimes){
 
-if(timeToMin(t)>=timeToMin(current)){
+if(toMin(t)>=currentMin){
 
 next=t;
 break;
@@ -389,62 +412,54 @@ break;
 
 }
 
-document.getElementById("nextBus")
-.innerHTML=next;
+document.getElementById("nextBus").innerHTML=next;
 
-const route=
-document.getElementById("route");
+/* バス位置 */
+
+const route=document.getElementById("route");
 
 route.innerHTML="";
 
-let buses=[];
+let active=[];
 
 base.forEach((start,index)=>{
 
-let generated=[];
+let arr=[start];
 
-let total2=0;
-
-generated.push(start);
+let sum=0;
 
 for(let i=0;i<move.length;i++){
 
-total2+=move[i];
+sum+=move[i];
 
-generated.push(
-addMin(start,total2)
-);
+arr.push(addMin(start,sum));
 
 }
 
-for(let i=0;i<generated.length-1;i++){
+for(let i=0;i<arr.length-1;i++){
 
-const nowm=timeToMin(current);
+const s=toMin(arr[i]);
+const e=toMin(arr[i+1]);
 
-const s=timeToMin(generated[i]);
-const e=timeToMin(generated[i+1]);
-
-if(nowm>=s && nowm<e){
+if(currentMin>=s && currentMin<e){
 
 let remain=0;
 
-if(i<idx){
+if(i<=stationIndex){
 
-for(let k=i;k<idx;k++){
+for(let k=i;k<stationIndex;k++){
 
 remain+=move[k];
 
 }
 
-remain-=(nowm-s);
+remain-=(currentMin-s);
 
-}else{
-
-remain=0;
+if(remain<0) remain=0;
 
 }
 
-buses.push({
+active.push({
 
 pos:i,
 remain:remain,
@@ -462,9 +477,11 @@ stops.forEach((stop,i)=>{
 
 let html="";
 
-buses.forEach(b=>{
+const buses=active.filter(b=>b.pos===i);
 
-if(b.pos===i){
+if(buses.length>0){
+
+buses.forEach(b=>{
 
 let cls="bus1";
 
@@ -475,7 +492,7 @@ html+=`
 
 <div class="circle ${cls}"></div>
 
-<div class="businfo">
+<div class="busText">
 
 あと${b.remain}分
 
@@ -483,11 +500,9 @@ html+=`
 
 `;
 
-}
-
 });
 
-if(html===""){
+}else{
 
 html=`
 
@@ -507,9 +522,7 @@ route.innerHTML+=`
 
 <div class="stop">
 
-${i<stops.length-1
-?'<div class="line"></div>'
-:''}
+${i<stops.length-1?'<div class="line"></div>':''}
 
 ${html}
 
@@ -527,12 +540,10 @@ update();
 
 setInterval(update,1000);
 
-document
-.getElementById("stationSelect")
+document.getElementById("station")
 .addEventListener("change",update);
 
-document
-.getElementById("mode")
+document.getElementById("mode")
 .addEventListener("change",update);
 
 </script>
