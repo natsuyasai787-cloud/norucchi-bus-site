@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>C30 大洲循環線 バスロケ</title>
 
 <style>
@@ -61,7 +60,7 @@ align-items:flex-start;
 }
 
 .stop{
-min-width:130px;
+min-width:140px;
 text-align:center;
 position:relative;
 font-size:14px;
@@ -71,8 +70,8 @@ font-weight:bold;
 .line{
 position:absolute;
 top:16px;
-left:65px;
-width:130px;
+left:70px;
+width:140px;
 height:5px;
 background:#ccc;
 z-index:0;
@@ -133,6 +132,17 @@ gap:18px;
 flex-wrap:wrap;
 font-weight:bold;
 margin-top:10px;
+}
+
+.pass{
+background:#999;
+}
+
+.passText{
+margin-top:8px;
+font-size:13px;
+font-weight:bold;
+color:#666;
 }
 
 </style>
@@ -228,8 +238,6 @@ const stops=[
 "大分駅前③"
 ];
 
-/* 駅間 */
-
 const move=[
 2,
 4,
@@ -243,80 +251,28 @@ const move=[
 1
 ];
 
-/* 平日 */
-
 const week=[
-"09:24",
-"09:54",
-"10:24",
-"10:54",
-"11:24",
-"11:54",
-"12:24",
-"12:55",
-"13:24",
-"13:54",
-"14:24",
-"14:54",
-"15:24",
-"15:54",
-"16:24",
-"16:54",
-"17:24",
-"17:54",
-"18:54",
-"19:34"
+"09:24","09:54","10:24","10:54",
+"11:24","11:54","12:24","12:55",
+"13:24","13:54","14:24","14:54",
+"15:24","15:54","16:24","16:54",
+"17:24","17:54","18:54","19:34"
 ];
-
-/* 土曜 */
 
 const sat=[
-"09:24",
-"09:54",
-"10:24",
-"10:54",
-"11:24",
-"11:54",
-"12:24",
-"12:54",
-"13:24",
-"13:54",
-"14:24",
-"14:54",
-"15:24",
-"15:54",
-"16:24",
-"16:54",
-"17:15",
-"17:54",
-"18:24",
-"18:54",
-"19:34"
+"09:24","09:54","10:24","10:54",
+"11:24","11:54","12:24","12:54",
+"13:24","13:54","14:24","14:54",
+"15:24","15:54","16:24","16:54",
+"17:15","17:54","18:24","18:54","19:34"
 ];
 
-/* 日祝 */
-
 const sun=[
-"09:24",
-"09:54",
-"10:24",
-"10:54",
-"11:24",
-"11:54",
-"12:34",
-"12:54",
-"13:05",
-"13:54",
-"14:24",
-"14:54",
-"15:24",
-"15:54",
-"16:54",
-"17:24",
-"17:54",
-"18:24",
-"18:54",
-"19:34"
+"09:24","09:54","10:24","10:54",
+"11:24","11:54","12:34","12:54",
+"13:05","13:54","14:24","14:54",
+"15:24","15:54","16:54","17:24",
+"17:54","18:24","18:54","19:34"
 ];
 
 function addMin(time,min){
@@ -385,8 +341,6 @@ addMin(t,total)
 
 });
 
-/* 時刻表示 */
-
 const area=
 document.getElementById("times");
 
@@ -394,19 +348,25 @@ area.innerHTML="";
 
 times.forEach(t=>{
 
+let status="";
+
+if(timeToMin(t)<timeToMin(current)){
+
+status="（通過済み）";
+
+}
+
 area.innerHTML+=`
 
 <div class="timebox">
 
-${t}
+${t} ${status}
 
 </div>
 
 `;
 
 });
-
-/* 次便 */
 
 const now=new Date();
 
@@ -431,8 +391,6 @@ break;
 
 document.getElementById("nextBus")
 .innerHTML=next;
-
-/* バス位置 */
 
 const route=
 document.getElementById("route");
@@ -529,6 +487,22 @@ html+=`
 
 });
 
+if(html===""){
+
+html=`
+
+<div class="circle pass"></div>
+
+<div class="passText">
+
+通過済み
+
+</div>
+
+`;
+
+}
+
 route.innerHTML+=`
 
 <div class="stop">
@@ -537,7 +511,7 @@ ${i<stops.length-1
 ?'<div class="line"></div>'
 :''}
 
-${html || '<div class="circle"></div>'}
+${html}
 
 ${stop}
 
