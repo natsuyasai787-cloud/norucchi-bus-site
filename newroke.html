@@ -102,7 +102,7 @@ box-shadow:0 0 14px #00c853;
 }
 
 .pass{
-background:#999;
+background:#9e9e9e;
 }
 
 .busText{
@@ -365,8 +365,6 @@ const stationIndex=
 document.getElementById("station")
 .selectedIndex;
 
-/* 現在時刻 */
-
 const now=new Date();
 
 const current=
@@ -475,12 +473,6 @@ remain+=move[k];
 
 remain-=(currentMin-s);
 
-if(remain<0){
-
-remain=0;
-
-}
-
 }
 
 active.push({
@@ -508,6 +500,22 @@ if(buses.length>0){
 
 buses.forEach(b=>{
 
+if(b.remain<=0){
+
+html+=`
+
+<div class="circle pass"></div>
+
+<div class="passText">
+
+通過済み
+
+</div>
+
+`;
+
+}else{
+
 let cls="bus1";
 
 if(b.type===1) cls="bus2";
@@ -524,6 +532,8 @@ html+=`
 </div>
 
 `;
+
+}
 
 });
 
