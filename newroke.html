@@ -86,7 +86,6 @@ border-radius:50%;
 background:#bbb;
 margin:auto;
 margin-bottom:8px;
-position:relative;
 }
 
 .bus{
@@ -111,6 +110,13 @@ font-weight:bold;
 line-height:1.7;
 }
 
+.next{
+text-align:center;
+font-size:34px;
+font-weight:bold;
+line-height:1.8;
+}
+
 .timebox{
 background:#0078ff;
 color:white;
@@ -120,13 +126,6 @@ margin-bottom:10px;
 text-align:center;
 font-size:24px;
 font-weight:bold;
-}
-
-.next{
-text-align:center;
-font-size:34px;
-font-weight:bold;
-line-height:1.8;
 }
 
 .legend{
@@ -185,17 +184,9 @@ C30 大洲循環線
 
 <div class="legend">
 
-<div>
-🔵 バス1
-</div>
-
-<div>
-🟠 バス2
-</div>
-
-<div>
-🟢 バス3
-</div>
+<div>🔵 バス1</div>
+<div>🟠 バス2</div>
+<div>🟢 バス3</div>
 
 </div>
 
@@ -400,7 +391,7 @@ addMin(t,total)
 
 });
 
-/* 時刻 */
+/* 時刻表 */
 
 const list=
 document.getElementById("times");
@@ -491,10 +482,32 @@ timeToMin(generated[i+1]);
 
 if(nowm>=start && nowm<end){
 
+let remainToSelected=0;
+
+if(i<idx){
+
+for(let k=i;k<idx;k++){
+
+remainToSelected+=move[k];
+
+}
+
+remainToSelected-=(
+nowm-start
+);
+
+}else{
+
+remainToSelected=0;
+
+}
+
 activeBuses.push({
+
 index:i,
-remain:end-nowm,
+remain:remainToSelected,
 bus:index%3
+
 });
 
 }
@@ -522,7 +535,7 @@ busHTML+=`
 
 <div class="businfo">
 
-あと${b.remain}分
+${b.remain}分後到着
 
 </div>
 
