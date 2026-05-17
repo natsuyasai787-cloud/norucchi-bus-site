@@ -2,270 +2,175 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>大洲循環線 β版</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>大洲循環線 C30 日曜テスト</title>
 
 <style>
-
 body{
 margin:0;
-background:#0b0b0b;
-color:white;
+background:#000;
+color:#fff;
 font-family:sans-serif;
+text-align:center;
 }
 
 header{
-text-align:center;
-padding:25px;
-background:#111;
-border-bottom:2px solid gold;
+padding:20px;
+border-bottom:3px solid #ffd000;
 }
 
-header h1{
-margin:0;
-color:gold;
+h1{
+color:#ffd000;
 }
 
-.beta{
-color:#ff5555;
+#clock{
+font-size:24px;
 margin-top:10px;
 }
 
-.info{
-text-align:center;
-color:#bbb;
-padding:15px;
-}
-
-.route{
-width:95%;
-max-width:700px;
-margin:20px auto;
-position:relative;
-padding:40px 0;
-}
-
 .line{
-position:absolute;
-left:50%;
-top:0;
-width:6px;
-height:100%;
-background:white;
-transform:translateX(-50%);
-border-radius:10px;
+position:relative;
+width:8px;
+height:1800px;
+background:#fff;
+margin:40px auto;
 }
 
 .stop{
-position:relative;
-height:90px;
-display:flex;
-justify-content:center;
-align-items:center;
-}
-
-.stop-name{
-background:#1a1a1a;
-border:1px solid #333;
-padding:10px 18px;
-border-radius:14px;
-z-index:2;
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+width:220px;
+background:#111;
+border:2px solid #333;
+border-radius:20px;
+padding:15px;
+font-size:24px;
 font-weight:bold;
 }
 
 .bus{
-width:26px;
-height:26px;
-border-radius:50%;
 position:absolute;
-z-index:5;
-box-shadow:0 0 20px rgba(255,255,255,0.4);
-transition:top 1s linear;
+left:-80px;
+top:10px;
+width:55px;
+height:55px;
+border-radius:50%;
+background:#008cff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+box-shadow:0 0 20px #008cff;
 }
-
-.red{
-background:#ff3b3b;
-left:calc(50% - 70px);
-}
-
-.blue{
-background:#3ea6ff;
-right:calc(50% - 70px);
-}
-
-.bottom{
-text-align:center;
-padding:40px;
-color:#888;
-}
-
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>大洲循環線</h1>
-
-<div class="beta">
-β版 試験運用中
-</div>
+<h1>大洲循環線 C30（日曜）</h1>
+<div id="clock"></div>
 </header>
 
-<div class="info">
-現在時刻からバス位置を計算しています
-</div>
+<div class="line">
 
-<div class="route" id="route">
+<div class="stop" id="stop0" style="top:0px;">上野</div>
+<div class="stop" id="stop1" style="top:120px;">大分駅前</div>
+<div class="stop" id="stop2" style="top:240px;">中央通り</div>
+<div class="stop" id="stop3" style="top:360px;">県庁前</div>
+<div class="stop" id="stop4" style="top:480px;">競技場前</div>
+<div class="stop" id="stop5" style="top:600px;">大津町一丁目</div>
+<div class="stop" id="stop6" style="top:720px;">大洲運動公園前</div>
+<div class="stop" id="stop7" style="top:840px;">商業高校前</div>
+<div class="stop" id="stop8" style="top:960px;">古ヶ鶴公民館入口</div>
+<div class="stop" id="stop9" style="top:1080px;">県庁前</div>
+<div class="stop" id="stop10" style="top:1200px;">中央通り③</div>
+<div class="stop" id="stop11" style="top:1320px;">中央通り④</div>
+<div class="stop" id="stop12" style="top:1440px;">大分駅前③</div>
+<div class="stop" id="stop13" style="top:1560px;">大分駅前</div>
+<div class="stop" id="stop14" style="top:1680px;">上野</div>
 
-<div class="line"></div>
-
-<div class="bus blue" id="blueBus"></div>
-<div class="bus red" id="redBus"></div>
-
-<div class="stop"><div class="stop-name">上野</div></div>
-<div class="stop"><div class="stop-name">大分駅前</div></div>
-<div class="stop"><div class="stop-name">中央通り</div></div>
-<div class="stop"><div class="stop-name">県庁前</div></div>
-<div class="stop"><div class="stop-name">競技場前</div></div>
-<div class="stop"><div class="stop-name">大津町一丁目</div></div>
-<div class="stop"><div class="stop-name">大洲運動公園前</div></div>
-<div class="stop"><div class="stop-name">商業高校前</div></div>
-<div class="stop"><div class="stop-name">古ヶ鶴公民館入口</div></div>
-<div class="stop"><div class="stop-name">県庁前</div></div>
-<div class="stop"><div class="stop-name">中央通り</div></div>
-<div class="stop"><div class="stop-name">大分駅前</div></div>
-<div class="stop"><div class="stop-name">上野</div></div>
-
-</div>
-
-<div class="bottom">
-おおいたバスねっと β版
 </div>
 
 <script>
 
-/*
-停留所位置
-*/
+function clock(){
 
-const stopPositions = [
-0,
-90,
-180,
-270,
-360,
-450,
-540,
-630,
-720,
-810,
-900,
-990,
-1080
-];
+const n=new Date();
 
-
-/*
-平日C30実データ
-*/
-
-const c30 = [
-
-[657,659,703,707,709,711,714,719,728,733,734],
-[734,736,740,744,746,748,751,756,805,810,811],
-[754,756,800,804,806,808,811,816,825,830,831],
-[824,826,830,834,836,838,841,846,855,900,901],
-[854,856,900,905,906,909,910,915,924,929,930],
-[924,926,930,935,936,939,940,945,954,959,1000],
-[954,956,1000,1005,1006,1009,1010,1015,1024,1029,1030],
-[1024,1026,1030,1035,1036,1039,1040,1045,1054,1059,1100],
-[1054,1056,1100,1105,1106,1109,1110,1115,1124,1129,1130]
-
-];
-
-
-/*
-現在時刻
-*/
-
-const now = new Date();
-
-const current =
-now.getHours() * 100 +
-now.getMinutes();
-
-const blueBus =
-document.getElementById("blueBus");
-
-
-
-/*
-時間変換
-*/
-
-function toMinutes(t){
-
-const h = Math.floor(t / 100);
-const m = t % 100;
-
-return h * 60 + m;
+document.getElementById("clock").innerHTML=
+String(n.getHours()).padStart(2,"0")
++":"
++String(n.getMinutes()).padStart(2,"0")
++":"
++String(n.getSeconds()).padStart(2,"0");
 
 }
 
-const currentMinutes =
-now.getHours() * 60 +
-now.getMinutes();
+setInterval(clock,1000);
 
+clock();
 
+/* 日曜C30 10時〜11時 */
 
-/*
-バス位置計算
-*/
+const sunday=[
 
-function updateBus(){
+[1000,1002,1004,1006,1008,1010,1012,1014,1016,1018,1020,1022,1024,1026,1028],
+[1030,1032,1034,1036,1038,1040,1042,1044,1046,1048,1050,1052,1054,1056,1058]
 
-for(let trip of c30){
+];
 
-for(let i = 0; i < trip.length - 1; i++){
+function drawBus(i){
 
-const start = toMinutes(trip[i]);
-const end = toMinutes(trip[i+1]);
-
-if(
-currentMinutes >= start &&
-currentMinutes <= end
-){
-
-const ratio =
-(currentMinutes - start)
-/
-(end - start);
-
-const top =
-stopPositions[i]
-+
-(
-(stopPositions[i+1] - stopPositions[i])
-* ratio
+const stop=document.getElementById(
+"stop"+i
 );
 
-blueBus.style.top =
-top + "px";
+if(!stop)return;
 
-return;
+const bus=document.createElement("div");
+
+bus.className="bus";
+
+bus.innerHTML="🚌";
+
+stop.appendChild(bus);
+
+}
+
+function update(){
+
+document
+.querySelectorAll(".bus")
+.forEach(b=>b.remove());
+
+const n=new Date();
+
+const now=
+n.getHours()*100
++
+n.getMinutes();
+
+sunday.forEach(t=>{
+
+for(let i=0;i<t.length;i++){
+
+if(now>=t[i] && now<t[i]+2){
+
+drawBus(i);
 
 }
 
 }
 
-}
-
-blueBus.style.display = "none";
+});
 
 }
 
-updateBus();
+setInterval(update,1000);
+
+update();
 
 </script>
 
