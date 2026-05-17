@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>C30 大洲循環線 バスロケ</title>
 
 <style>
@@ -15,7 +15,7 @@ color:#222;
 }
 
 header{
-background:#0066ff;
+background:#0078ff;
 color:white;
 padding:18px;
 font-size:28px;
@@ -25,14 +25,16 @@ text-align:center;
 
 .wrap{
 padding:16px;
+max-width:700px;
+margin:auto;
 }
 
 .card{
 background:white;
 border-radius:18px;
 padding:18px;
-margin-bottom:16px;
-box-shadow:0 2px 10px rgba(0,0,0,0.08);
+margin-bottom:18px;
+box-shadow:0 3px 10px rgba(0,0,0,0.08);
 }
 
 .label{
@@ -51,46 +53,48 @@ background:#edf4ff;
 margin-bottom:14px;
 }
 
-.row{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:12px;
-flex-wrap:wrap;
-font-size:22px;
-font-weight:bold;
+.location{
 text-align:center;
-line-height:1.8;
+font-size:28px;
+font-weight:bold;
+line-height:2;
 }
 
-.bigicon{
+.station{
+font-size:22px;
+}
+
+.blue{
 font-size:34px;
 }
 
-.time{
+.red{
+font-size:34px;
+}
+
+.next{
 text-align:center;
-font-size:20px;
+font-size:34px;
 font-weight:bold;
-margin-top:14px;
 line-height:1.8;
 }
 
 .timebox{
-background:#0066ff;
+background:#0078ff;
 color:white;
 padding:14px;
 border-radius:14px;
 margin-bottom:10px;
-font-size:22px;
-font-weight:bold;
 text-align:center;
+font-size:24px;
+font-weight:bold;
 }
 
-.nextbus{
-font-size:32px;
-font-weight:bold;
+.sub{
 text-align:center;
-line-height:1.7;
+font-size:18px;
+margin-top:10px;
+line-height:1.8;
 }
 
 </style>
@@ -106,7 +110,9 @@ C30 大洲循環線
 
 <div class="card">
 
-<div class="label">停留所選択</div>
+<div class="label">
+停留所選択
+</div>
 
 <select id="stationSelect">
 
@@ -118,13 +124,15 @@ C30 大洲循環線
 <option>大洲運動公園前</option>
 <option>商業高校前</option>
 <option>古ヶ鶴公民館入口</option>
-<option>県庁前</option>
+<option>県庁前（戻り）</option>
 <option>中央通り③</option>
 <option>大分駅前③</option>
 
 </select>
 
-<div class="label">ダイヤ</div>
+<div class="label">
+ダイヤ
+</div>
 
 <select id="mode">
 
@@ -138,36 +146,51 @@ C30 大洲循環線
 
 <div class="card">
 
-<div class="label">現在位置</div>
+<div class="label">
+現在位置イメージ
+</div>
 
-<div class="row">
+<div class="location">
 
-<span id="fromStop">--</span>
+<span id="prevStop" class="station">
+--
+</span>
 
-<span class="bigicon">
+<span class="blue">
 🔵
 </span>
 
-<span>
 →
-</span>
 
-<span class="bigicon" style="color:red;">
+<span class="red">
 🔴
 </span>
 
-<span id="toStop">--</span>
+<span id="nowStop" class="station">
+--
+</span>
 
 </div>
 
-<div class="time">
+<div class="sub">
 
-約<span id="remainMin">--</span>分
+駅間：約
+<span id="sectionMin">0</span>
+分
 
-<br>
+</div>
 
-（駅間時間：
-<span id="sectionTime">--</span>分）
+</div>
+
+<div class="card">
+
+<div class="label">
+次のバス
+</div>
+
+<div class="next" id="nextBus">
+
+--:--
 
 </div>
 
@@ -175,15 +198,9 @@ C30 大洲循環線
 
 <div class="card">
 
-<div class="label">次のバス</div>
-
-<div class="nextbus" id="nextbus"></div>
-
+<div class="label">
+この停留所の時刻
 </div>
-
-<div class="card">
-
-<div class="label">この停留所の時刻</div>
 
 <div id="times"></div>
 
@@ -192,6 +209,8 @@ C30 大洲循環線
 </div>
 
 <script>
+
+/* 上野除外済み */
 
 const stops=[
 "大分駅前⑥",
@@ -202,10 +221,12 @@ const stops=[
 "大洲運動公園前",
 "商業高校前",
 "古ヶ鶴公民館入口",
-"県庁前",
+"県庁前（戻り）",
 "中央通り③",
 "大分駅前③"
 ];
+
+/* 駅間 */
 
 const move=[
 2,
@@ -225,21 +246,20 @@ const move=[
 const week=[
 "09:24",
 "09:39",
-"09:54",
 "10:24",
-"10:44",
+"10:54",
 "11:24",
-"12:24",
-"12:55",
-"13:24",
+"12:04",
+"12:34",
+"12:54",
+"13:05",
 "13:54",
 "14:24",
 "14:54",
 "15:24",
 "15:54",
-"16:24",
 "16:54",
-"17:15",
+"17:24",
 "17:54",
 "18:54",
 "19:34"
@@ -266,7 +286,6 @@ const sat=[
 "16:54",
 "17:24",
 "17:54",
-"18:24",
 "18:54",
 "19:54"
 ];
@@ -289,7 +308,7 @@ const sun=[
 "15:24",
 "15:54",
 "16:54",
-"17:15",
+"17:24",
 "17:54",
 "18:54",
 "19:34"
@@ -342,36 +361,29 @@ const idx=
 document.getElementById("stationSelect")
 .selectedIndex;
 
-const from=
+const prev=
 idx===0
 ? "始発"
 : stops[idx-1];
 
-const to=
+const now=
 stops[idx];
+
+document.getElementById("prevStop")
+.innerHTML=prev;
+
+document.getElementById("nowStop")
+.innerHTML=now;
 
 const section=
 idx===0
 ? 0
 : move[idx-1];
 
-document.getElementById("fromStop").innerHTML=
-from;
+document.getElementById("sectionMin")
+.innerHTML=section;
 
-document.getElementById("toStop").innerHTML=
-to;
-
-document.getElementById("remainMin").innerHTML=
-section;
-
-document.getElementById("sectionTime").innerHTML=
-section;
-
-const base=getBase();
-
-const result=[];
-
-base.forEach(t=>{
+/* 累積時間 */
 
 let total=0;
 
@@ -381,9 +393,19 @@ total+=move[i];
 
 }
 
-result.push(addMin(t,total));
+const base=getBase();
+
+const result=[];
+
+base.forEach(t=>{
+
+result.push(
+addMin(t,total)
+);
 
 });
+
+/* 時刻 */
 
 const list=
 document.getElementById("times");
@@ -406,13 +428,16 @@ ${t}
 
 /* 次のバス */
 
-const now=new Date();
+const nowTime=
+new Date();
 
 const current=
-String(now.getHours()).padStart(2,"0")
+String(nowTime.getHours())
+.padStart(2,"0")
 +":"
 +
-String(now.getMinutes()).padStart(2,"0");
+String(nowTime.getMinutes())
+.padStart(2,"0");
 
 let next="本日の運行終了";
 
@@ -420,7 +445,7 @@ for(let t of result){
 
 if(timeToMin(t)>=timeToMin(current)){
 
-next=`${t} 発`;
+next=t;
 
 break;
 
@@ -428,8 +453,8 @@ break;
 
 }
 
-document.getElementById("nextbus").innerHTML=
-next;
+document.getElementById("nextBus")
+.innerHTML=next;
 
 }
 
