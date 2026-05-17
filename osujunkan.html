@@ -2,423 +2,163 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>大洲循環線 β版</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>大洲循環線 C30 日曜テスト</title>
 
 <style>
-
 body{
 margin:0;
-background:#050505;
-color:white;
+background:#000;
+color:#fff;
 font-family:sans-serif;
+text-align:center;
 }
 
 header{
-text-align:center;
-padding:25px;
-border-bottom:3px solid gold;
+padding:20px;
+border-bottom:3px solid #ffd000;
 }
 
-header h1{
-margin:0;
-color:gold;
-}
-
-#todayType{
-text-align:center;
-margin-top:10px;
-font-size:22px;
-color:#aaa;
+h1{
+color:#ffd000;
 }
 
 #clock{
-text-align:center;
-font-size:32px;
-color:#00ffcc;
+font-size:24px;
 margin-top:10px;
 }
 
-.line-area{
+.line{
 position:relative;
-max-width:500px;
-margin:40px auto;
-padding-bottom:80px;
-}
-
-.main-line{
-position:absolute;
-left:50%;
-transform:translateX(-50%);
 width:8px;
-height:100%;
-background:white;
+height:1800px;
+background:#fff;
+margin:40px auto;
 }
 
 .stop{
-position:relative;
-margin:50px 0;
-display:flex;
-justify-content:center;
-}
-
-.stop-name{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+width:220px;
 background:#111;
 border:2px solid #333;
-border-radius:15px;
-padding:12px 24px;
-z-index:2;
+border-radius:20px;
+padding:15px;
+font-size:24px;
+font-weight:bold;
 }
 
 .bus{
 position:absolute;
-width:32px;
-height:32px;
+left:-80px;
+top:10px;
+width:55px;
+height:55px;
 border-radius:50%;
-top:0;
+background:#008cff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+box-shadow:0 0 20px #008cff;
 }
-
-.red{
-background:red;
-left:60px;
-}
-
-.blue{
-background:#4da6ff;
-right:60px;
-}
-
-.green{
-background:#00d26a;
-left:10px;
-}
-
-.yellow{
-background:yellow;
-right:10px;
-}
-
-.purple{
-background:violet;
-left:-40px;
-}
-
-.white{
-background:white;
-right:-40px;
-}
-
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>大洲循環線 β版</h1>
+<h1>大洲循環線 C30（日曜）</h1>
+<div id="clock"></div>
 </header>
 
-<div id="todayType"></div>
-<div id="clock"></div>
+<div class="line">
 
-<div class="line-area">
-
-<div class="main-line"></div>
-
-<div class="stop" id="stop0"><div class="stop-name">上野</div></div>
-<div class="stop" id="stop1"><div class="stop-name">大分駅前</div></div>
-<div class="stop" id="stop2"><div class="stop-name">中央通り</div></div>
-<div class="stop" id="stop3"><div class="stop-name">県庁前</div></div>
-<div class="stop" id="stop4"><div class="stop-name">競技場前</div></div>
-<div class="stop" id="stop5"><div class="stop-name">大津町一丁目</div></div>
-<div class="stop" id="stop6"><div class="stop-name">大洲運動公園前</div></div>
-<div class="stop" id="stop7"><div class="stop-name">商業高校前</div></div>
-<div class="stop" id="stop8"><div class="stop-name">古ヶ鶴公民館入口</div></div>
-<div class="stop" id="stop9"><div class="stop-name">中央通り④</div></div>
+<div class="stop" id="stop0" style="top:0px;">上野</div>
+<div class="stop" id="stop1" style="top:120px;">大分駅前</div>
+<div class="stop" id="stop2" style="top:240px;">中央通り</div>
+<div class="stop" id="stop3" style="top:360px;">県庁前</div>
+<div class="stop" id="stop4" style="top:480px;">競技場前</div>
+<div class="stop" id="stop5" style="top:600px;">大津町一丁目</div>
+<div class="stop" id="stop6" style="top:720px;">大洲運動公園前</div>
+<div class="stop" id="stop7" style="top:840px;">商業高校前</div>
+<div class="stop" id="stop8" style="top:960px;">古ヶ鶴公民館入口</div>
+<div class="stop" id="stop9" style="top:1080px;">県庁前</div>
+<div class="stop" id="stop10" style="top:1200px;">中央通り③</div>
+<div class="stop" id="stop11" style="top:1320px;">中央通り④</div>
+<div class="stop" id="stop12" style="top:1440px;">大分駅前③</div>
+<div class="stop" id="stop13" style="top:1560px;">大分駅前</div>
+<div class="stop" id="stop14" style="top:1680px;">上野</div>
 
 </div>
 
 <script>
 
-
-[130,131,132,133,134,135,136,137,138,139],
-
-[137,138,139,140,141,142,143,144,145,146],
-
-[657,659,703,707,709,711,714,719,728,733],
-[734,736,740,744,746,748,751,756,805,810],
-[754,756,800,804,806,808,811,816,825,830],
-[824,826,830,834,836,838,841,846,855,900],
-
-[854,856,900,905,906,909,910,915,924,929],
-[924,926,930,935,936,939,940,945,954,959],
-[954,956,1000,1005,1006,1009,1010,1015,1024,1029],
-[1024,1026,1030,1035,1036,1039,1040,1045,1054,1059],
-
-[1054,1056,1100,1105,1106,1109,1110,1115,1124,1129],
-[1124,1126,1130,1135,1136,1139,1140,1145,1154,1159],
-[1154,1156,1200,1205,1207,1209,1211,1215,1224,1229],
-[1224,1226,1230,1235,1237,1239,1241,1245,1254,1259],
-
-[1254,1256,1300,1305,1307,1309,1311,1315,1324,1329],
-[1354,1356,1400,1405,1406,1409,1411,1418,1423,1426],
-[1454,1456,1500,1505,1506,1509,1512,1519,1524,1527],
-[1554,1556,1600,1605,1606,1609,1612,1619,1624,1627],
-
-[1654,1656,1700,1705,1706,1709,1712,1719,1724,1729],
-[1754,1756,1800,1805,1806,1809,1811,1818,1823,1829],
-[1854,1856,1900,1905,1906,1908,1910,1914,1923,1928],
-[1934,1936,1940,1945,1946,1948,1950,1954,2003,2008],
-
-[2024,2026,2030,2035,2036,2038,2040,2045,2054,2059],
-[2054,2056,2100,2105,2106,2108,2110,2115,2124,2129],
-[2124,2126,2130,2135,2136,2138,2140,2145,2154,2159],
-[2154,2156,2200,2205,2206,2208,2210,2215,2224,2229]
-
-],
-
-c10:[
-
-[708,717,719,723,728,730,732,735,742,747],
-[1644,1654,1656,1701,1705,1707,1709,1711,1719,1724],
-[1744,1754,1756,1801,1805,1807,1809,1811,1819,1824]
-
-],
-
-c11:[
-
-[754,756,800,805,806,808,810,818,823,826],
-[954,956,1000,1004,1005,1008,1010,1018,1023,1026]
-
-],
-
-c12:[
-
-[711,720,722,727,731,732,735,737,742,750]
-
-],
-
-c13:[
-
-[804,806,810,814,815,818,820,829,834,835]
-
-],
-
-k65:[
-
-[649,742,744,748,752,753,756,759]
-
-],
-
-k88:[
-
-]
-
-
-};
-
-
-// ======================
-// 土曜
-// ======================
-
-const saturday = {
-
-c30:[
-
-[137,138,139,140,141,142,143,144,145,146],
-
-[719,721,725,730,731,733,735,739,749,754],
-[824,826,830,835,836,838,840,844,854,859],
-[924,926,930,935,936,938,940,944,954,959],
-[954,956,1000,1005,1007,1009,1011,1015,1024,1029],
-
-[1024,1026,1030,1035,1037,1039,1041,1045,1054,1059],
-[1054,1056,1100,1105,1107,1109,1111,1115,1124,1129],
-[1124,1126,1130,1135,1137,1139,1141,1145,1154,1159],
-
-[1924,1926,1930,1935,1936,1938,1940,1945,1954,1959],
-[1954,1956,2000,2005,2006,2008,2010,2015,2024,2029],
-[2024,2026,2030,2035,2036,2038,2040,2045,2054,2059]
-
-],
-
-c10:[
-
-[708,717,719,723,728,730,732,735,742,747]
-
-],
-
-c11:[
-
-[954,956,1000,1004,1005,1008,1010,1018,1023,1026]
-
-],
-
-c12:[
-
-[711,720,722,727,731,732,735,737,742,750]
-
-],
-
-c13:[
-
-[804,806,810,814,815,818,820,829,834,835]
-
-],
-
-k65:[
-
-[649,742,744,748,752,753,756,759]
-
-],
-
-k88:[
-
-[611,701,703,708,712,713,716,719]
-
-]
-
-
-};
-
-
-// ======================
-// 日祝
-// ======================
-
-const sunday = {
-
-html id="f6n2qd" c30:[ [137,138,139,140,141,142,143,148,149,151], [719,721,725,730,731,733,735,739,749,754], [824,826,830,835,836,838,840,844,854,859], [924,926,930,935,936,938,940,944,954,959], [954,956,1000,1005,1007,1009,1011,1015,1024,1029], [1024,1026,1030,1035,1037,1039,1041,1045,1054,1059], [1054,1056,1100,1105,1107,1109,1111,1115,1124,1129], [1124,1126,1130,1135,1137,1139,1141,1145,1154,1159], [1924,1926,1930,1935,1936,1938,1940,1945,1954,1959], [1954,1956,2000,2005,2006,2008,2010,2015,2024,2029], [2024,2026,2030,2035,2036,2038,2040,2045,2054,2059] ], c10:[ [708,717,719,723,728,730,732,735,742,747] ], c11:[ [954,956,1000,1004,1005,1008,1010,1018,1023,1026] ], c12:[ [711,720,722,727,731,732,735,737,742,750] ], c13:[ [804,806,810,814,815,818,820,829,834,835] ], k65:[ [649,742,744,748,752,753,756,759] ], // 日祝はK88なし k88:[ ]
-
-
-};
-
-
-// ======================
-// 曜日判定
-// ======================
-
-const today = new Date().getDay();
-
-let activeData;
-let dayText;
-
-if(today === 0){
-
-activeData = sunday;
-dayText = "本日は日祝ダイヤ";
-
-}
-else if(today === 6){
-
-activeData = saturday;
-dayText = "本日は土曜ダイヤ";
-
-}
-else{
-
-activeData = weekday;
-dayText = "本日は平日ダイヤ";
+function clock(){
+
+const n=new Date();
+
+document.getElementById("clock").innerHTML=
+String(n.getHours()).padStart(2,"0")
++":"
++String(n.getMinutes()).padStart(2,"0")
++":"
++String(n.getSeconds()).padStart(2,"0");
 
 }
 
-document.getElementById("todayType").innerHTML =
-dayText;
+setInterval(clock,1000);
 
+clock();
 
-// ======================
-// 時計
-// ======================
+/* 日曜C30 10時〜11時 */
 
-function updateClock(){
+const sunday=[
 
-const now = new Date();
+[1000,1002,1004,1006,1008,1010,1012,1014,1016,1018,1020,1022,1024,1026,1028],
+[1030,1032,1034,1036,1038,1040,1042,1044,1046,1048,1050,1052,1054,1056,1058]
 
-const h =
-String(now.getHours()).padStart(2,"0");
+];
 
-const m =
-String(now.getMinutes()).padStart(2,"0");
+function drawBus(i){
 
-const s =
-String(now.getSeconds()).padStart(2,"0");
-
-document.getElementById("clock").innerHTML =
-h + ":" + m + ":" + s;
-
-}
-
-
-// ======================
-// 現在時刻取得
-// ======================
-
-function getNow(){
-
-const now = new Date();
-
-return now.getHours() * 100 +
-now.getMinutes();
-
-}
-
-
-// ======================
-// バス削除
-// ======================
-
-function clearBus(){
-
-document
-.querySelectorAll(".bus")
-.forEach(v => v.remove());
-
-}
-
-
-// ======================
-// バス表示
-// ======================
-
-function drawBus(stopIndex,color){
-
-const stop =
-document.getElementById(
-"stop" + stopIndex
+const stop=document.getElementById(
+"stop"+i
 );
 
-if(!stop) return;
+if(!stop)return;
 
-const bus =
-document.createElement("div");
+const bus=document.createElement("div");
 
-bus.className =
-"bus " + color;
+bus.className="bus";
+
+bus.innerHTML="🚌";
 
 stop.appendChild(bus);
 
 }
 
+function update(){
 
-// ======================
-// 路線処理
-// ======================
+document
+.querySelectorAll(".bus")
+.forEach(b=>b.remove());
 
-function processRoute(routeData,color){
+const n=new Date();
 
-const now = getNow();
+const now=
+n.getHours()*100
++
+n.getMinutes();
 
-routeData.forEach(trip => {
+sunday.forEach(t=>{
 
-for(let i=0;i<trip.length-1;i++){
+for(let i=0;i<t.length;i++){
 
-const start = trip[i];
-const end = trip[i+1];
+if(now>=t[i] && now<t[i]+2){
 
-if(now >= start && now < end){
-
-drawBus(i,color);
+drawBus(i);
 
 }
 
@@ -428,30 +168,9 @@ drawBus(i,color);
 
 }
 
+setInterval(update,1000);
 
-// ======================
-// 更新
-// ======================
-
-function updateBus(){
-
-clearBus();
-
-processRoute(activeData.c30,"red");
-processRoute(activeData.c10,"blue");
-processRoute(activeData.c11,"green");
-processRoute(activeData.c12,"yellow");
-processRoute(activeData.c13,"purple");
-processRoute(activeData.k65,"white");
-processRoute(activeData.k88,"white");
-
-}
-
-updateClock();
-updateBus();
-
-setInterval(updateClock,1000);
-setInterval(updateBus,30000);
+update();
 
 </script>
 
